@@ -1,6 +1,9 @@
+/* eslint-disable simple-import-sort/imports */
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
+
+import { Loader } from 'lucide-react'
 
 import { nekotip_backend } from '../../declarations/nekotip_backend'
 
@@ -15,7 +18,7 @@ function App() {
   return (
     <main className="text-3xl" onClick={handleGreet}>
       <Button type="button" variant="default">
-        Click me!
+        <Loader className="animate-spin duration-300" /> &ensp;Click me!
       </Button>
 
       <span className="ms-4 text-red-400">{text}</span>

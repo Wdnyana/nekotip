@@ -11,7 +11,6 @@ export default {
       addComponents({})
       addUtilities({})
     }),
-    require('tailwindcss-animate'),
   ],
   theme: {
     extend: {
