@@ -1,17 +1,41 @@
+import HashMap "mo:base/HashMap";
+import Principal "mo:base/Principal";
+
 module {
+  public type Users = HashMap.HashMap<Principal, User>;
+  public type Contents = HashMap.HashMap<Text, Content>;
+  public type Transactions = HashMap.HashMap<Text, Transaction>;
+  public type UserBalances = HashMap.HashMap<Principal, UserBalance>;
+
+  // USER TYPES
   public type User = {
     id : Principal;
     username : Text;
-    name : Text;
-    bio : Text;
-    isCreator : Bool;
-    profilePic : ?Text;
-    bannerPic : ?Text;
-    socials : Socials;
-    categories : ?[Category];
+    depositAddress : Text;
+    referralCode : Text;
     followers : [Principal];
     following : [Principal];
+    referrals : [Principal];
     createdAt : Int;
+
+    bio : ?Text;
+    socials : ?Socials;
+    name : ?Text;
+    profilePic : ?Text;
+    bannerPic : ?Text;
+    referredBy : ?Principal;
+    categories : ?[Text];
+  };
+
+  public type UserUpdateData = {
+    username : ?Text;
+    bio : ?Text;
+    socials : ?Socials;
+    name : ?Text;
+    profilePic : ?Text;
+    bannerPic : ?Text;
+    categories : ?[Text];
+    isCreator : ?Bool;
   };
 
   public type Socials = {
@@ -25,71 +49,89 @@ module {
     facebook : ?Text;
   };
 
-  public type Category = {
-    #Animation;
-    #Art;
-    #Blogging;
-    #ComicsAndCartoons;
-    #Commissions;
-    #Community;
-    #Cosplay;
-    #DanceAndTheatre;
-    #Design;
-    #DrawingAndPainting;
-    #Education;
-    #FoodAndDrink;
-    #Gaming;
-    #HealthAndFitness;
-    #Lifestyle;
-    #Money;
-    #Music;
-    #News;
-    #Other;
-    #Photography;
-    #Podcast;
-    #ScienceAndTech;
-    #Social;
-    #Software;
-    #Streaming;
-    #Translator;
-    #VideoAndFilm;
-    #Writing;
+  public type UserBalance = {
+    id : Principal;
+    balance : Nat;
   };
 
+  // CONTENT TYPES
   public type Content = {
     id : Text;
     creatorId : Principal;
     title : Text;
     description : Text;
-    price : Nat;
-    contentHash : Text;
-    isExclusive : Bool;
-    createdAt : Int;
+    tier : ContentTier;
+    thumbnail : Text;
+    contentImages : [Text];
+    categories : [Text];
     likes : [Principal];
-    comments : [(Principal, Text)];
+    comments : [Comment];
+    unlockedBy : [Principal];
+    createdAt : Int;
+    updatedAt : ?Int;
   };
 
+  public type ContentTier = {
+    #Free;
+    #Tier1; // $30
+    #Tier2; // $15
+    #Tier3; // $5
+  };
+
+  public type Comment = {
+    id : Text;
+    commenter : Principal;
+    contentId : Text;
+    text : Text;
+    createdAt : Int;
+    updatedAt : ?Int;
+  };
+
+  public type ContentPreview = {
+    id : Text;
+    creatorId : Principal;
+    title : Text;
+    description : Text;
+    tier : ContentTier;
+    thumbnail : Text;
+    categories : [Text];
+    likesCount : Nat;
+    commentsCount : Nat;
+  };
+
+  // TRANSACTION TYPES
   public type Transaction = {
     id : Text;
     from : Principal;
     to : Principal;
     amount : Nat;
     transactionType : TransactionType;
-    contentId : ?Text; // null if type #donation
-    comment : ?Text; // null if type #contentPurchase
+    txStatus : TxStatus;
+    contentId : ?Text;
+    supportComment : ?Text;
+    platformFee : Nat;
+    referralFee : ?Nat;
     timestamp : Int;
   };
 
   public type TransactionType = {
     #donation;
     #contentPurchase;
+    #withdrawal;
+    #referralPayout;
+    #platformFee;
   };
 
-  public type Error = {
-    #NotFound;
-    #AlreadyExists;
-    #NotAuthorized;
-    #InsufficientFunds;
-    #InvalidInput;
+  public type TxStatus = {
+    #pending;
+    #completed;
+    #failed;
+  };
+
+  // PLATFORM TYPES
+  public type PlatformBalance = {
+    var balance : Nat;
+    var totalFees : Nat;
+    var referralPayouts : Nat;
   };
 };
