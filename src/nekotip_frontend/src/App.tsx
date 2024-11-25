@@ -2,32 +2,41 @@ import { useEffect } from 'react';
 import { Route, Routes, useSearchParams } from 'react-router-dom';
 
 import ProtectedRoute from './components/features/ProtectedRoute/ProtectedRoute';
-import useAuth from './hooks/useAuth';
+import { useAuthManager } from './hooks/useAuthManager';
 import useUser from './hooks/useUser';
 import ContentPage from './pages/ContentPage';
 import ExplorePage from './pages/ExplorePage';
 import LandingPage from './pages/LandingPage';
 import ContentManagement from './pages/user/creator/ContentManagement';
-import ManageProfilePage from './pages/user/creator/ManageProfilePage';
 import MyFollowersPage from './pages/user/creator/MyFollowersPage';
 import MyReferrals from './pages/user/creator/MyReferralsPage';
 import MySupporterPage from './pages/user/creator/MySupporterPage';
 import WalletPage from './pages/user/creator/WalletPage';
+import ProfilePage from './pages/user/ProfilePage';
 import DiscoverPage from './pages/user/supporter/DiscoverPage';
+import ExclusiveContent from './pages/user/supporter/ExclusiveContent';
 import FollowedCreatorsPage from './pages/user/supporter/FollowedCreatorsPage';
-import NekoVaultPage from './pages/user/supporter/NekoVaultPage';
 import SupportGivenPage from './pages/user/supporter/SupportGivenPage';
 import ViewedProfilePage from './pages/user/ViewedProfilePage';
 
 function App() {
   const [searchParams] = useSearchParams();
 
-  const { isAuthenticated, checkSession } = useAuth();
-  const { updateReferralCode } = useUser();
+  const { updateReferralCode, fetchUser } = useUser();
+  const { initializeAuth, isAuthenticated, principal, actor } =
+    useAuthManager();
 
+  // INITIALIZE AUTHENTICATION
   useEffect(() => {
-    checkSession();
-  }, [checkSession]);
+    initializeAuth();
+  }, [initializeAuth]);
+
+  // FETCH USER DATA
+  useEffect(() => {
+    if (isAuthenticated && principal && actor) {
+      fetchUser(principal, actor);
+    }
+  }, [actor, fetchUser, isAuthenticated, principal]);
 
   useEffect(() => {
     const referralCode = searchParams.get('referral');
@@ -46,12 +55,15 @@ function App() {
       <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
         {/* Supporter Dashboard */}
         <Route path="/dashboard/discover" element={<DiscoverPage />} />
-        <Route path="/dashboard/nekovault" element={<NekoVaultPage />} />
+        <Route
+          path="/dashboard/exclusive-content"
+          element={<ExclusiveContent />}
+        />
         <Route path="/dashboard/following" element={<FollowedCreatorsPage />} />
         <Route path="/dashboard/support-given" element={<SupportGivenPage />} />
 
         {/* Creator Dashboard */}
-        <Route path="/dashboard" element={<ManageProfilePage />} />
+        <Route path="/dashboard" element={<ProfilePage />} />
         <Route
           path="/dashboard/content-management"
           element={<ContentManagement />}

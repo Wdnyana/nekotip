@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-import plugin from 'tailwindcss'
+import plugin from 'tailwindcss';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -7,9 +7,9 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   plugins: [
     plugin(function ({ addBase, addComponents, addUtilities }) {
-      addBase({})
-      addComponents({})
-      addUtilities({})
+      addBase({});
+      addComponents({});
+      addUtilities({});
     }),
   ],
   theme: {
@@ -23,7 +23,32 @@ export default {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      fontFamily: {
+        montserrat: ['Montserrat', 'sans-serif'],
+        quicksand: ['Quicksand', 'sans-serif'],
+      },
+      boxShadow: {
+        custom: '4px 4px 0px #5A534F',
+        hover: '2px 2px 0px #5A534F',
+      },
       colors: {
+        bg: '#FFE4E1',
+        mainAccent: '#FEC2C3',
+        secondaryAccent: '#D9C3F2',
+        thirdAccent: '#C3CFF2',
+        subtext: '#4E4C47',
+        caption: '#7A6858',
+        border: '#3E3D39',
+        shadow: '#5A534F',
+        FFE4E1: '#FFE4E1',
+        FEC2C3: '#FEC2C3',
+        D9C3F2: '#D9C3F2',
+        C3CFF2: '#C3CFF2',
+        '4E4C47': '#4E4C47',
+        '7A6858': '#7A6858',
+        '3E3D39': '#3E3D39',
+        '5A534F': '#5A534F',
+
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -54,7 +79,7 @@ export default {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
         },
-        border: 'hsl(var(--border))',
+        // border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         chart: {
@@ -67,4 +92,4 @@ export default {
       },
     },
   },
-}
+};
