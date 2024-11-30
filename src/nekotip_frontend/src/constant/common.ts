@@ -9,3 +9,46 @@ export const INTERNET_IDENTITY_URL =
     : `https://identity.ic0.app`;
 
 export const BACKEND_CANISTER_ID = CANISTER_ID_BACKEND || '';
+
+export const CATEGORIES = [
+  'Cosplay',
+  'Streaming',
+  'Gaming',
+  'Art',
+  'Entertainment',
+  'Commisions',
+  'Music',
+  'Writing',
+  'Cooking',
+  'Tech',
+  'Fashion',
+  'Photography',
+  'Travel',
+  'DIY',
+  'Education',
+  'Lifestyle',
+  'News',
+  'Other',
+];
+
+export const EXPLORE_CATEGORIES = [
+  'All',
+  'Cosplay',
+  'Streaming',
+  'Gaming',
+  'Art',
+  'Entertainment',
+  'Commisions',
+  'Music',
+  'Writing',
+  'Cooking',
+  'Tech',
+  'Fashion',
+  'Photography',
+  'Travel',
+  'DIY',
+  'Education',
+  'Lifestyle',
+  'News',
+  'Other',
+];

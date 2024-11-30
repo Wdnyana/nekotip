@@ -1,59 +1,113 @@
 # `NekoTip`
 
-Welcome to your new `NekoTip` project and to the Internet Computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
+**NekoTip** is a decentralized platform built on the **Internet Computer Protocol (ICP)**. It empowers fans to support their favorite creators securely through donations and unlock exclusive content. With a built-in referral program, NekoTip creates a rewarding ecosystem for both fans and creators.
 
-To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
+<p align="center">
+  <img src="https://amethyst-wrong-bobolink-547.mypinata.cloud/ipfs/QmeNwVtZTFs3aVsoqBkwrRMaQR3iBsgTE4CuRvV2rsPwVf" width="100%">
+</p>
 
-To learn more before you start working with `NekoTip`, see the following documentation available online:
+---
 
-- [Quick Start](https://internetcomputer.org/docs/current/developer-docs/setup/deploy-locally)
-- [SDK Developer Tools](https://internetcomputer.org/docs/current/developer-docs/setup/install)
-- [Motoko Programming Language Guide](https://internetcomputer.org/docs/current/motoko/main/motoko)
-- [Motoko Language Quick Reference](https://internetcomputer.org/docs/current/motoko/main/language-manual)
+## 🚀 Features  
 
-If you want to start working on your project right away, you might want to try the following commands:
+### 🌟 For Fans  
+- **Explore Creators**: Discover and follow your favorite creators.  
+- **Donate to Creators**: Send ICP tokens directly to creators and show your support.  
+- **Unlock Exclusive Content**: Access premium posts by creators for a set fee.  
+- **Referral Program**: Earn incentives by referring others to the platform.  
+
+### 🎨 For Creators  
+- **Monetize Content**: Post exclusive content and set prices for unlocking.  
+- **Receive Donations**: Accept ICP tokens directly from your supporters.  
+- **Manage Followers**: Track your fans and build your community.  
+- **Dashboard Insights**: View donations, referral earnings, and other metrics.  
+- **Secure Withdrawals**: Transfer earnings to your personal wallet.  
+
+---
+
+## 💻 Technology Stack  
+
+### Core ICP Technologies  
+- **Internet Computer Protocol (ICP)** 
+- **Motoko**
+- **ICP Ledger**
+- **Internet Identity**
+- **Http Outcalls**
+
+### Frontend Technologies 
+- **React.js**
+- **Vite** 
+- **Typescript**
+- **Redux**
+- **Tailwind**
+- **Lucide Dev**
+
+### IPFS Provider
+- **Pinata Web3**
+
+---
+
+## 🛠️ Prerequisites
+
+Ensure you have the following installed:
+
+- **DFX (Dfinity SDK)** - [Installation Guide](https://internetcomputer.org/docs/current/developer-docs/getting-started/install)
+- **Node.js** (Latest LTS version) - [Download](https://nodejs.org/)
+- **Pinata Account** - [Sign Up](https://pinata.cloud/)
+
+## 🚀 Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yoghantara08/nekotip.git
+   cd nekotip
+   ```
+
+2. Install project dependencies:
+   ```bash
+   npm install
+   ```
+
+## 🔐 Environment Setup
+
+### Pinata Configuration
+
+1. Log in to [Pinata](https://pinata.cloud/)
+2. Navigate to **API Keys**
+3. Create a new API key:
+   - Provide a descriptive name
+   - Set appropriate permissions
+4. Copy the generated **JWT Token**
+5. Go to **Gateways** and note your domain
+
+### Environment Variables
+
+Create a `.env` file in the `nekotip_frontend` directory:
 
 ```bash
-cd nekotip/
-dfx help
-dfx canister --help
+VITE_PINATA_JWT=<your-pinata-jwt>
+VITE_GATEWAY_URL=<your-pinata-domain>
 ```
 
-## Running the project locally
+## 💻 Local Development
 
-If you want to test your project locally, you can use the following commands:
+1. Start the Internet Computer Local Network:
+   ```bash
+   dfx start --clean --background
+   ```
 
-```bash
-# Starts the replica, running in the background
-dfx start --background
+2. Deploy the ICP Ledger:
+   ```bash
+   npm run deploy-ledger
+   # Alternative: Follow instructions in deploy_icp_ledger.sh
+   ```
 
-# Deploys your canisters to the replica and generates your candid interface
-dfx deploy
-```
+3. Deploy project canisters:
+   ```bash
+   dfx deploy
+   ```
 
-Once the job completes, your application will be available at `http://localhost:4943?canisterId={asset_canister_id}`.
-
-If you have made changes to your backend canister, you can generate a new candid interface with
-
-```bash
-npm run generate
-```
-
-at any time. This is recommended before starting the frontend development server, and will be run automatically any time you run `dfx deploy`.
-
-If you are making frontend changes, you can start a development server with
-
-```bash
-npm start
-```
-
-Which will start a server at `http://localhost:8080`, proxying API requests to the replica at port 4943.
-
-### Note on frontend environment variables
-
-If you are hosting frontend code somewhere without using DFX, you may need to make one of the following adjustments to ensure your project does not fetch the root key in production:
-
-- set`DFX_NETWORK` to `ic` if you are using Webpack
-- use your own preferred method to replace `process.env.DFX_NETWORK` in the autogenerated declarations
-  - Setting `canisters -> {asset_canister_id} -> declarations -> env_override to a string` in `dfx.json` will replace `process.env.DFX_NETWORK` with the string in the autogenerated declarations
-- Write your own `createActor` constructor
+4. Launch development server:
+   ```bash
+   npm start
+   ```

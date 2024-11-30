@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { useAuthManager } from '@/hooks/useAuthManager';
 import { cn } from '@/lib/utils/cn';
+import { useAuthManager } from '@/store/AuthProvider';
 
 import Button from '../../Button/Button';
 
@@ -31,7 +31,7 @@ const Navbar = () => {
               </li>
             )}
             <li className="hover:text-black">
-              <Link to="/explore">Explore Creator</Link>
+              <Link to="/creator">Explore Creator</Link>
             </li>
             <li className="cursor-pointer hover:text-black">Support</li>
           </ul>

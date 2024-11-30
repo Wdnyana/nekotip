@@ -12,8 +12,9 @@ import UserService "services/UserService";
 import ContentService "services/ContentService";
 import TransactionService "services/TransactionService";
 import Types "types/Types";
+import Ledger "canister:icp_ledger_canister";
 
-actor class NekoTip() = this {
+actor NekoTip {
   private var users : Types.Users = HashMap.HashMap(0, Principal.equal, Principal.hash);
   private var contents : Types.Contents = HashMap.HashMap(0, Text.equal, Text.hash);
   private var transactions : Types.Transactions = HashMap.HashMap(0, Text.equal, Text.hash);
@@ -58,6 +59,11 @@ actor class NekoTip() = this {
     return UserService.authenticateUser(users, msg.caller, username, depositAddress, referralCode);
   };
 
+  // GET CALLER PRINCIPAL
+  public shared (msg) func whoami() : async Principal {
+    msg.caller;
+  };
+
   // UPDATE USER PROFILE
   public shared (msg) func updateUserProfile(updateData : Types.UserUpdateData) : async Result.Result<Types.User, Text> {
     return UserService.updateUserProfile(users, msg.caller, updateData);
@@ -71,6 +77,11 @@ actor class NekoTip() = this {
   // GET USER BY ID
   public query func getUserById(userId : Principal) : async ?Types.User {
     return users.get(userId);
+  };
+
+  // GET USER BY USERNAME
+  public query func getUserByUsername(username : Text) : async ?Types.User {
+    return UserService.getUserByUsername(users, username);
   };
 
   // FOLLOW/UNFOLLOW USER
@@ -98,6 +109,11 @@ actor class NekoTip() = this {
     return await UserService.getAccountBalance(msg.caller);
   };
 
+  // GET CREDIT BALANCE
+  public shared (msg) func getCreditBalance() : async Types.UserBalance {
+    return UserService.getCreditBalance(userBalances, msg.caller);
+  };
+
   // CONTENT ENDPOINT ======================================
   // POST CONTENT
   public shared (msg) func postContent(
@@ -106,14 +122,18 @@ actor class NekoTip() = this {
     tier : Types.ContentTier,
     thumbnail : Text,
     contentImages : [Text],
-    categories : [Text],
   ) : async Result.Result<Types.Content, Text> {
-    return ContentService.postContent(contents, msg.caller, title, description, tier, thumbnail, contentImages, categories);
+    return ContentService.postContent(contents, msg.caller, title, description, tier, thumbnail, contentImages);
   };
 
   // GET ALL CONTENT PREVIEWS (Timeline/Feed/Discover)
   public shared query func getAllContentPreviews() : async [Types.ContentPreview] {
     return ContentService.getAllContentPreviews(contents);
+  };
+
+  // GET CREATOR CONTENT PREVIEWS
+  public shared query func getCreatorContentPreview(creatorId : Principal) : async [Types.ContentPreview] {
+    return ContentService.getCreatorContentPreview(contents, creatorId);
   };
 
   // GET CREATOR CONTENT LIST
@@ -124,6 +144,11 @@ actor class NekoTip() = this {
   // GET CONTENT DETAILS
   public shared (msg) func getContentDetails(contentId : Text) : async Result.Result<Types.Content, ?Types.ContentPreview> {
     return ContentService.getContentDetails(contents, msg.caller, contentId);
+  };
+
+  // GET PURCHASED CONTENT PREVIEWS LIST
+  public shared (msg) func getPurchasedContentPreviews() : async [Types.ContentPreview] {
+    return ContentService.getPurchasedContentPreviews(transactions, contents, msg.caller);
   };
 
   // LIKE/UNLIKE CONTENT (TOGGLE LIKE)
@@ -173,13 +198,13 @@ actor class NekoTip() = this {
   };
 
   // WITHDRAW USER BALANCE
-  public shared (msg) func withdraw(amount : Nat64) : async Result.Result<Types.Transaction, Text> {
+  public shared (msg) func withdraw(amount : Nat) : async Result.Result<Types.Transaction, Text> {
     return await TransactionService.withdraw(transactions, userBalances, platformBalance, msg.caller, amount);
   };
 
   // GET RECEIVED DONATIONS LIST
-  public shared query (msg) func getReceivedDonations() : async [Types.Transaction] {
-    return TransactionService.getReceivedDonations(transactions, msg.caller);
+  public shared query func getReceivedDonations(userId : Principal) : async [Types.Transaction] {
+    return TransactionService.getReceivedDonations(transactions, userId);
   };
 
   // GET GIVEN DONATIONS LIST
@@ -195,6 +220,27 @@ actor class NekoTip() = this {
   // GET REFERRAL EARNINGS LISST
   public shared query (msg) func getReferralEarnings() : async [Types.Transaction] {
     return TransactionService.getReferralEarnings(transactions, msg.caller);
+  };
+
+  // GET PLATFORM BALANCE
+  public func getPlatformICPBalance() : async Nat {
+    let canisterAccount = {
+      owner = Principal.fromActor(NekoTip);
+      subaccount = null;
+    };
+    return await Ledger.icrc1_balance_of(canisterAccount);
+  };
+
+  public func getPlatformBalance() : async Nat {
+    platformBalance.balance;
+  };
+
+  public func getPlatformTotalFees() : async Nat {
+    platformBalance.totalFees;
+  };
+
+  public func getPlatformReferralPayouts() : async Nat {
+    platformBalance.referralPayouts;
   };
 
   // GET ICP USD RATE
